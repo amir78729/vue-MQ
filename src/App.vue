@@ -1,28 +1,83 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <div class="container">
+      <div>
+        <h1 class="display-2 text-center">Vue Math Quiz</h1>
+      </div>
+      <hr>
+      <div>
+        <transition name="flip" mode="out-in">
+          <component :is="selectedComponent"
+                     @next="selectedComponent = 'app-question'"
+                     @answered="answered($event)"></component>
+        </transition>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import Question from "./components/Question.vue";
+  import Answer from "./components/Answer.vue";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  export default {
+    name: 'App',
+    components: {
+      appAnswer: Answer,
+      appQuestion: Question
+    },
+    data() {
+      return {
+        selectedComponent: 'appQuestion',
+
+      }
+    },
+    methods: {
+      answered(isCorrect) {
+        if (isCorrect){
+          this.selectedComponent = 'app-answer'
+        }else{
+          this.selectedComponent = 'app-question'
+          alert('WRONG!')
+        }
+      }
+    }
   }
-}
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  .flip-enter{
+
+  }
+  .flip-enter-active{
+    animation: flip-in 0.5s ease-out forwards;
+  }
+  .flip-leave{
+
+  }
+  .flip-leave-active{
+    animation: flip-out 0.5s ease-out forwards;
+  }
+  @keyframes flip-in {
+    from {
+      transform: rotateY(90deg);
+      filter: brightness(0.8);
+    }
+    to {
+      transform: rotateY(0deg);
+      filter: brightness(1);
+    }
+  }
+  @keyframes flip-out {
+    from {
+      transform: rotateY(0deg);
+      filter: brightness(1);
+    }
+    to {
+      transform: rotateY(90deg);
+      filter: brightness(0.8);
+    }
+  }
+
 </style>
